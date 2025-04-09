@@ -1,0 +1,87 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>数据推送</title>
+
+    <script type="text/javascript" src="js/jquery-1.9.1.js"></script>
+    <style>
+      .data_push {
+        height: 400px;
+        width: 600px;
+        border: 1px solid black;
+        margin: auto;
+        padding: 20px;
+      }
+      .item1 {
+        margin-top: 20px;
+        display: flex;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="data_push">
+      <div>邮箱推送</div>
+      <div class="item1">
+        <div>
+          <span>是否进行邮箱推送:</span>
+          <select id="is_push">
+            <option value="1">是</option>
+            <option value="2">否</option>
+          </select>
+        </div>
+        <div style="margin-left: 20px">
+          <span>推送邮箱地址:</span>
+          <input id="input">
+        </div>
+      </div>
+      <div class="item2">
+        <span>数据推送格式：</span>
+        <span id="file_type">
+          <input type="checkbox" value="csv" name="file">CSV文件
+          <input type="checkbox" value="NC" name="file">NC文件
+        </span>
+      </div>
+      <div class="item3">
+        <span>数据推送类型：</span>
+        <span id="data_type">
+          <input type="checkbox" value="1" name="type">短帧数据
+          <input type="checkbox" value="2" name="type">长帧数据
+          <input type="checkbox" value="3" name="type">任务帧数据
+        </span>
+      </div>
+      <div>
+        <button id="push">推送</button>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    $(document).ready(function () {
+      $("#push").click(function () {
+        const is_push = $("#is_push").val()
+        const input = $("#input").val()
+        let file_type = []
+        let data_type = []
+        $("input[name = 'file']:checked").each(function () {
+          file_type.push($(this).val())
+        })
+        $("input[name = 'type']:checked").each(function () {
+          data_type.push($(this).val())
+        })
+        if (is_push == 1) {
+          $.ajax({
+            url: 'push/dataPush',
+            data: {email: input, fileType: file_type, dataType: data_type},
+            type: 'POST',
+            contentType: "application/x-www-form-urlencoded;charset=utf-8",
+            async: false,
+            timeout: 10000,
+            success: function (data) {
+              window.alert("推送成功")
+            }
+          })
+        }
+      })
+    })
+  </script>
+</html>
