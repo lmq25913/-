@@ -18,8 +18,19 @@ config = {
 def convert_to_xlsx(file_path):
     """
     将非.xlsx格式的Excel文件转换为.xlsx格式
-    :param file_path: 原始文件路径
-    :return: 转换后的文件路径对象
+    
+    此函数使用Windows的Excel应用程序将各种格式的Excel文件转换为.xlsx标准格式
+    
+    参数:
+    file_path (str): 原始Excel文件的完整路径
+    
+    返回:
+    Path: 转换后的.xlsx文件路径，如果转换失败则返回None
+    
+    注意:
+    - 使用win32com.client调用Excel应用程序进行文件转换
+    - 转换过程会打开并关闭Excel应用程序
+    - 适用于.xls、.csv等非.xlsx格式的文件
     """
     try:
         excel = win32.gencache.EnsureDispatch('Excel.Application')
@@ -35,7 +46,25 @@ def convert_to_xlsx(file_path):
 
 def import_excel_files_to_mysql():
     """
-    主函数：将指定目录下的Excel文件导入MySQL数据库
+    主函数：将指定目录下的Excel文件批量导入MySQL数据库
+    
+    主要功能:
+    1. 创建目标数据库（如果不存在）
+    2. 扫描指定目录下的Excel文件
+    3. 转换非.xlsx格式的文件
+    4. 逐个处理Excel文件和工作表
+    5. 将数据导入MySQL数据库
+    6. 自动设置主键
+    
+    处理流程:
+    - 支持多种Excel文件格式（.xlsx, .xls等）
+    - 自动处理多工作表的Excel文件
+    - 智能识别和设置主键列
+    - 批量插入数据，提高导入效率
+    
+    异常处理:
+    - 详细记录每个文件和工作表的导入过程
+    - 遇到错误时提供具体的错误信息
     """
     try:
         # 1. 创建数据库（如果不存在）
